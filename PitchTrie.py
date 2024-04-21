@@ -38,7 +38,6 @@ class PitchTrie:
                 if current_pitch == pitch_.get_pitch():
                     working_list = pitch_
                     working_list.add_pitch()
-                    working_list = working_list
                     next_pitch = True
                     break
                 elif next_pitch == True:
