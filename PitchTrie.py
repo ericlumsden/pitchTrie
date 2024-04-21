@@ -10,6 +10,7 @@ class Pitch:
 
     def add_pitch(self): self.count += 1
     def get_pitch(self): return self.type
+    def get_count(self): return self.count
     def add_next_pitch(self, pitch_): return self.next_pitch.append(pitch_)
     def get_next_pitches(self): return self.next_pitch
 
@@ -19,11 +20,9 @@ class Pitch:
 class PitchTrie:
     pitch_df: pd.DataFrame
     pitch_sequence = Pitch('node')
-    pitches: list=[]
 
     def find_pitches(self):
-        self.pitches = [x for x in self.pitch_df["pitch_type"].unique()]
-        for pitch_ in self.pitches:
+        for pitch_ in [x for x in self.pitch_df["pitch_type"].unique()]:
             self.pitch_sequence[pitch_] = Pitch(pitch_)
         
     def sequence(self):
@@ -33,6 +32,7 @@ class PitchTrie:
             current_pitch = row["pitch_type"]
             if row["balls"] + row["strikes"] == 0:
                 working_list = self.pitch_sequence
+            # Use a next_pitch bool to escape the for loop...
             next_pitch = False
             for pitch_ in working_list.get_next_pitches():
                 if current_pitch == pitch_.get_pitch():
@@ -40,7 +40,30 @@ class PitchTrie:
                     working_list.add_pitch()
                     working_list = working_list
                     next_pitch = True
+                    break
+                elif next_pitch == True:
+                    break
             if next_pitch == False:
                 working_list.add_next_pitch(Pitch(current_pitch))
     
-    def get_sequence(self): print(self.pitch_sequence)
+    # Need to figure out a way to print out the sequence...
+    def get_sequence(self): 
+        # Attempting to make a printable list out of the objects via recursion...
+        def search_arrays(node, current_dict):
+            for x in node.get_next_pitches():
+                current_dict[x.get_pitch()] = {'count': x.get_count(), 'next_pitches': x.get_next_pitches()}
+                current_dict = current_dict[x.get_pitch()]
+                if len(current_dict['next_pitches']) != 0:
+                    search_arrays(node, current_dict)
+                else:
+                    return current_dict
+
+        temp_dict = {}
+        for pitch_ in self.pitch_sequence.get_next_pitches():
+            temp_dict[pitch_] = search_arrays(self.pitch_sequence, {})
+        print(temp_dict)
+
+
+# Let's make a test of the class
+def test():
+    pass
