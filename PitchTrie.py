@@ -9,9 +9,9 @@ class Pitch:
     next_pitch: list=field(default_factory=[])
 
     def add_pitch(self): self.count += 1
-    def get_pitch(self): self.type
-    def add_next_pitch(self, pitch_): self.next_pitch.append(pitch_)
-    def get_next_pitches(self): self.next_pitch
+    def get_pitch(self): return self.type
+    def add_next_pitch(self, pitch_): return self.next_pitch.append(pitch_)
+    def get_next_pitches(self): return self.next_pitch
 
 
 
