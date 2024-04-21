@@ -13,6 +13,10 @@ class Pitch:
     def get_count(self): return self.count
     def add_next_pitch(self, pitch_): return self.next_pitch.append(pitch_)
     def get_next_pitches(self): return self.next_pitch
+    def advance_pitch(self, next_pitch_):
+        for pitch_ in self.next_pitch:
+            if next_pitch_ == pitch_.get_pitch():
+                return pitch_
 
 
 
@@ -44,6 +48,7 @@ class PitchTrie:
                     break
             if next_pitch == False:
                 working_list.add_next_pitch(Pitch(current_pitch))
+                working_list = working_list.advance_pitch(current_pitch)
     
     # Need to figure out a way to print out the sequence...
     def get_sequence(self): 
