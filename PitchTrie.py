@@ -50,20 +50,18 @@ class PitchTrie:
     
     # Need to figure out a way to print out the sequence...
     def get_sequence(self): 
-        print(self.pitch_sequence)
-        # Attempting to make a printable list out of the objects via recursion...
-        def search_arrays(node, current_dict):
-            for x in node.get_next_pitches():
-                current_dict[x.get_pitch()] = {'count': x.get_count(), 'next_pitches': x.get_next_pitches()}
-                current_dict = current_dict[x.get_pitch()]
-                if len(current_dict['next_pitches']) != 0:
-                    search_arrays(node, current_dict)
+        def traverse_objects(nodes, temp_dict_):
+            for node in nodes.get_next_pitches():
+                working_list = node
+                temp_dict_[node.get_pitch()] = {'count': node.get_count(), 'next_pitches': {f'{next_pitch.get_pitch()}': {} for next_pitch in node.get_next_pitches()}}
+                if len(node.get_next_pitches()) == 0:
+                    return temp_dict_
                 else:
-                    return current_dict
+                    traverse_objects(working_list, temp_dict_[node.get_pitch()])
 
         temp_dict = {}
         for pitch_ in self.pitch_sequence.get_next_pitches():
-            temp_dict[pitch_] = search_arrays(self.pitch_sequence, {})
+            temp_dict[pitch_.get_pitch()] = traverse_objects(self.pitch_sequence, {})
         print(temp_dict)
 
 
