@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 import pandas as pd
+import matplotlib.pyplot as plt
 
 # Need multiple instances of the Pitch class
 class Pitch:
@@ -50,23 +51,23 @@ class PitchTrie:
     
     # Need to figure out a way to print out the sequence...
     def get_sequence(self): 
-        temp_dict = {'node': {}}
-        temp_dict_ = temp_dict
-        def traverse_objects(current_key, nodes):
-            for node in nodes.get_next_pitches():
-                working_list = node
-                temp_dict_[current_key][node.get_pitch()] = {'count': node.get_count(), 'next_pitches': {f'{next_pitch.get_pitch()}': {} for next_pitch in node.get_next_pitches()}}
-                temp_dict_ = temp_dict_[current_key]
-                current_key = [key for key in temp_dict[current_key].keys()][-1]
-                temp_dict_ = temp_dict_[current_key]
-                print(current_key)
+        seq_dict = {'node': {}}
+        dict_list = [seq_dict['node']]
+
+        def traverse_objects(nodes):
+            nonlocal dict_list
+            for node in nodes:
+                temp_dict = dict_list[-1]
+                temp_dict[node.get_pitch()] = {'count': node.get_count(), 'next_pitches': {f'{next_pitch.get_pitch()}': {} for next_pitch in node.get_next_pitches()}}
+                dict_list.append(temp_dict[node.get_pitch()])
                 if len(node.get_next_pitches()) == 0:
+                    dict_list = dict_list[:-1]
                     continue
                 else:
-                    traverse_objects(current_key, working_list)
-        print(self.pitch_sequence.get_next_pitches())
-        traverse_objects('node', self.pitch_sequence)
-        print(temp_dict)
+                    temp_dict = dict_list[-1]
+                    traverse_objects(node.get_next_pitches())
+        traverse_objects(self.pitch_sequence.get_next_pitches())
+        print(seq_dict)
 
 
 
@@ -75,6 +76,7 @@ def test(temp_sequence):
     test_trie = PitchTrie(temp_sequence)
     test_trie.sequence()
     test_trie.get_sequence()
+
 
 if __name__ == "__main__":
     # lookup from pybaseball takes some time... maybe save to a .csv down the road to speed this up
