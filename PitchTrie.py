@@ -1,15 +1,17 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 import pandas as pd
 
-
-@dataclass
+# Need multiple instances of the Pitch class
 class Pitch:
-    name: str
-    count = 1
-    next_pitch = []
+    def __init__(self, name, seq):
+        self.name = name
+        self.seq = name
+        self.count = 1
+        self.next_pitch = []
 
     def add_pitch(self): self.count += 1
     def get_pitch(self): return self.name
+    def get_seq(self): return self.seq
     def get_count(self): return self.count
     def add_next_pitch(self, pitch_): self.next_pitch.append(pitch_)
     def get_next_pitches(self): return self.next_pitch
@@ -23,30 +25,32 @@ class Pitch:
 @dataclass
 class PitchTrie:
     pitch_df: pd.DataFrame
-    pitch_sequence = Pitch('node')
+    pitch_sequence = Pitch('node', '')
 
     def sequence(self):
         working_list = self.pitch_sequence
+        seq_str = ''
         for idx, row in self.pitch_df.iterrows():
             current_pitch = row["pitch_type"]
             if row["balls"] + row["strikes"] == 0:
                 working_list = self.pitch_sequence
-            # Use a next_pitch bool to escape the for loop...
+                seq_str = ''
+            seq_str += current_pitch
             next_pitch = False
             for pitch_ in working_list.get_next_pitches():
-                if current_pitch == pitch_.get_pitch():
-                    working_list = pitch_
-                    working_list.add_pitch()
+                if (current_pitch == pitch_.get_pitch()) and (seq_str == pitch_.get_seq()):
+                    pitch_.add_pitch()
                     next_pitch = True
+                    working_list = working_list.advance_pitch(current_pitch)
                     break
-                elif next_pitch == True:
-                    break
+            # Use a next_pitch bool to escape the for loop...
             if next_pitch == False:
-                working_list.add_next_pitch(Pitch(current_pitch))
+                working_list.add_next_pitch(Pitch(current_pitch, seq_str))
                 working_list = working_list.advance_pitch(current_pitch)
     
     # Need to figure out a way to print out the sequence...
     def get_sequence(self): 
+        print(self.pitch_sequence)
         # Attempting to make a printable list out of the objects via recursion...
         def search_arrays(node, current_dict):
             for x in node.get_next_pitches():
@@ -77,4 +81,6 @@ if __name__ == "__main__":
     cole_sequence = cole_id["key_mlbam"][0]
 
     cole_v_boston = statcast_pitcher('2023-08-19', '2023-08-21', cole_sequence)
-    test(cole_v_boston)
+    cole_v_boston.head()
+    # the df is in reverse chronological order, first row is the last pitch he threw... gotta reverse it
+    test(cole_v_boston.iloc[::-1])
