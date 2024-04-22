@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 import pandas as pd
 import matplotlib.pyplot as plt
+import pydot
 
 # Need multiple instances of the Pitch class
 class Pitch:
@@ -20,6 +21,8 @@ class Pitch:
         for pitch_ in self.next_pitch:
             if next_pitch_ == pitch_.get_pitch():
                 return pitch_
+    # to make conversion to json easier...
+    def dictionize(self): return {'count': self.count, 'next_pitches': {f'{next_pitch.get_pitch()}': {} for next_pitch in self.next_pitch}}
 
 
 
@@ -48,26 +51,22 @@ class PitchTrie:
             if next_pitch == False:
                 working_list.add_next_pitch(Pitch(current_pitch, seq_str))
                 working_list = working_list.advance_pitch(current_pitch)
-    
-    # Need to figure out a way to print out the sequence...
-    def get_sequence(self): 
-        seq_dict = {'node': {}}
-        dict_list = [seq_dict['node']]
 
-        def traverse_objects(nodes):
-            nonlocal dict_list
-            for node in nodes:
-                temp_dict = dict_list[-1]
-                temp_dict[node.get_pitch()] = {'count': node.get_count(), 'next_pitches': {f'{next_pitch.get_pitch()}': {} for next_pitch in node.get_next_pitches()}}
-                dict_list.append(temp_dict[node.get_pitch()])
-                if len(node.get_next_pitches()) == 0:
-                    dict_list = dict_list[:-1]
-                    continue
-                else:
-                    temp_dict = dict_list[-1]
-                    traverse_objects(node.get_next_pitches())
-        traverse_objects(self.pitch_sequence.get_next_pitches())
-        print(seq_dict)
+    def graph_node(self, graph, prev_node, node):
+        graph.add_edge(pydot.Edge(f"{prev_node.get_pitch()} (count: {prev_node.get_count()})", f"{node.get_pitch()} (count: {node.get_count()})"))
+
+    def traverse_trie(self, graph, prev_node):
+        if len(prev_node.get_next_pitches()) == 0:
+            pass
+        for node in prev_node.get_next_pitches():
+            self.graph_node(graph, prev_node, node)
+            self.traverse_trie(graph, node)
+
+    def graph_sequence(self, title='PitchTrie'):
+        graph = pydot.Dot(graph_type='graph')
+        for first_pitch in self.pitch_sequence.get_next_pitches():
+            self.traverse_trie(graph, first_pitch)
+        graph.write_png(f'{title}.png')
 
 
 
@@ -75,7 +74,7 @@ class PitchTrie:
 def test(temp_sequence):
     test_trie = PitchTrie(temp_sequence)
     test_trie.sequence()
-    test_trie.get_sequence()
+    test_trie.graph_sequence(title='ColeTest')
 
 
 if __name__ == "__main__":
