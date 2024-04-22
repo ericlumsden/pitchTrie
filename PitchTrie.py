@@ -33,6 +33,7 @@ class PitchTrie:
 
     def sequence(self):
         working_list = self.pitch_sequence
+        # the error seems to be coming from the seq_str... why is this resetting on every pitch? it should only reset on final pitch of the at bat
         seq_str = ''
         for idx, row in self.pitch_df.iterrows():
             current_pitch = row["pitch_type"]
