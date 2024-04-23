@@ -33,14 +33,14 @@ class PitchTrie:
 
     def sequence(self):
         working_list = self.pitch_sequence
-        # the error seems to be coming from the seq_str... why is this resetting on every pitch? it should only reset on final pitch of the at bat
-        seq_str = ''
+        seq_str = '' # seq_str keeps track of the pitch sequence to make sure the pitch object affected isn't an instance of that pitch in a different sequence
         for idx, row in self.pitch_df.iterrows():
             current_pitch = row["pitch_type"]
             if row["balls"] + row["strikes"] == 0:
                 working_list = self.pitch_sequence
                 seq_str = ''
             seq_str += current_pitch
+            # Use a next_pitch bool to escape the for loop...
             next_pitch = False
             for pitch_ in working_list.get_next_pitches():
                 if (current_pitch == pitch_.get_pitch()) and (seq_str == pitch_.get_seq()):
@@ -48,7 +48,6 @@ class PitchTrie:
                     next_pitch = True
                     working_list = working_list.advance_pitch(current_pitch, seq_str)
                     break
-            # Use a next_pitch bool to escape the for loop...
             if next_pitch == False:
                 working_list.add_next_pitch(Pitch(current_pitch, seq_str))
                 working_list = working_list.advance_pitch(current_pitch, seq_str)
