@@ -7,7 +7,7 @@ import pydot
 class Pitch:
     def __init__(self, name, seq):
         self.name = name
-        self.seq = name
+        self.seq = seq
         self.count = 1
         self.next_pitch = []
 
@@ -17,9 +17,9 @@ class Pitch:
     def get_count(self): return self.count
     def add_next_pitch(self, pitch_): self.next_pitch.append(pitch_)
     def get_next_pitches(self): return self.next_pitch
-    def advance_pitch(self, next_pitch_):
+    def advance_pitch(self, next_pitch_, next_seq_):
         for pitch_ in self.next_pitch:
-            if next_pitch_ == pitch_.get_pitch():
+            if (next_pitch_ == pitch_.get_pitch()) and (next_seq_ == pitch_.get_seq()):
                 return pitch_
     # to make conversion to json easier...
     def dictionize(self): return {'count': self.count, 'next_pitches': {f'{next_pitch.get_pitch()}': {} for next_pitch in self.next_pitch}}
@@ -46,15 +46,15 @@ class PitchTrie:
                 if (current_pitch == pitch_.get_pitch()) and (seq_str == pitch_.get_seq()):
                     pitch_.add_pitch()
                     next_pitch = True
-                    working_list = working_list.advance_pitch(current_pitch)
+                    working_list = working_list.advance_pitch(current_pitch, seq_str)
                     break
             # Use a next_pitch bool to escape the for loop...
             if next_pitch == False:
                 working_list.add_next_pitch(Pitch(current_pitch, seq_str))
-                working_list = working_list.advance_pitch(current_pitch)
+                working_list = working_list.advance_pitch(current_pitch, seq_str)
 
     def graph_node(self, graph, prev_node, node):
-        graph.add_edge(pydot.Edge(f"{prev_node.get_pitch()} (count: {prev_node.get_count()})", f"{node.get_pitch()} (count: {node.get_count()})"))
+        graph.add_edge(pydot.Edge(f"{prev_node.get_pitch()} (count: {prev_node.get_count()}, seq: {prev_node.get_seq()})", f"{node.get_pitch()} (count: {node.get_count()}, seq: {node.get_seq()})"))
 
     def traverse_trie(self, graph, prev_node):
         if len(prev_node.get_next_pitches()) == 0:
@@ -64,10 +64,11 @@ class PitchTrie:
             self.traverse_trie(graph, node)
 
     def graph_sequence(self, title='PitchTrie'):
-        graph = pydot.Dot(graph_type='graph')
         for first_pitch in self.pitch_sequence.get_next_pitches():
+            graph = pydot.Dot(graph_type='graph')
             self.traverse_trie(graph, first_pitch)
-        graph.write_png(f'{title}.png')
+            graph.write_png(f'{title}_firstPitch_{first_pitch.get_pitch()}.png')
+        
 
 
 
