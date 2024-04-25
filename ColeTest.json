@@ -1,1 +1,281 @@
-{"node": {"next_pitches": ["FF", "KC", "FC", "SL"]}}
+{
+    "count": 1,
+    "next_pitches": {
+        "FF": {
+            "count": 13,
+            "next_pitches": {
+                "KC": {
+                    "count": 2,
+                    "next_pitches": {
+                        "FC": {
+                            "count": 1,
+                            "next_pitches": {}
+                        },
+                        "FF": {
+                            "count": 1,
+                            "next_pitches": {}
+                        }
+                    }
+                },
+                "FF": {
+                    "count": 5,
+                    "next_pitches": {
+                        "FC": {
+                            "count": 2,
+                            "next_pitches": {
+                                "SL": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "FF": {
+                                            "count": 1,
+                                            "next_pitches": {
+                                                "FF": {
+                                                    "count": 1,
+                                                    "next_pitches": {}
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "FF": {
+                            "count": 1,
+                            "next_pitches": {
+                                "SL": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "FF": {
+                                            "count": 1,
+                                            "next_pitches": {
+                                                "FF": {
+                                                    "count": 1,
+                                                    "next_pitches": {
+                                                        "FF": {
+                                                            "count": 1,
+                                                            "next_pitches": {
+                                                                "FF": {
+                                                                    "count": 1,
+                                                                    "next_pitches": {}
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "SL": {
+                            "count": 1,
+                            "next_pitches": {
+                                "SL": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "KC": {
+                                            "count": 1,
+                                            "next_pitches": {
+                                                "FF": {
+                                                    "count": 1,
+                                                    "next_pitches": {
+                                                        "FF": {
+                                                            "count": 1,
+                                                            "next_pitches": {
+                                                                "FF": {
+                                                                    "count": 1,
+                                                                    "next_pitches": {}
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "KC": {
+                            "count": 1,
+                            "next_pitches": {
+                                "FC": {
+                                    "count": 1,
+                                    "next_pitches": {}
+                                }
+                            }
+                        }
+                    }
+                },
+                "FC": {
+                    "count": 3,
+                    "next_pitches": {
+                        "FF": {
+                            "count": 2,
+                            "next_pitches": {
+                                "SL": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "FF": {
+                                            "count": 1,
+                                            "next_pitches": {}
+                                        }
+                                    }
+                                },
+                                "KC": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "SL": {
+                                            "count": 1,
+                                            "next_pitches": {
+                                                "FF": {
+                                                    "count": 1,
+                                                    "next_pitches": {
+                                                        "FC": {
+                                                            "count": 1,
+                                                            "next_pitches": {
+                                                                "FF": {
+                                                                    "count": 1,
+                                                                    "next_pitches": {}
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "SL": {
+                    "count": 1,
+                    "next_pitches": {
+                        "FF": {
+                            "count": 1,
+                            "next_pitches": {
+                                "FC": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "FF": {
+                                            "count": 1,
+                                            "next_pitches": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "KC": {
+            "count": 2,
+            "next_pitches": {
+                "FF": {
+                    "count": 2,
+                    "next_pitches": {
+                        "FF": {
+                            "count": 2,
+                            "next_pitches": {
+                                "FF": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "CH": {
+                                            "count": 1,
+                                            "next_pitches": {
+                                                "FF": {
+                                                    "count": 1,
+                                                    "next_pitches": {
+                                                        "FF": {
+                                                            "count": 1,
+                                                            "next_pitches": {
+                                                                "CH": {
+                                                                    "count": 1,
+                                                                    "next_pitches": {}
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "FC": {
+            "count": 4,
+            "next_pitches": {
+                "FF": {
+                    "count": 2,
+                    "next_pitches": {
+                        "FF": {
+                            "count": 1,
+                            "next_pitches": {
+                                "SL": {
+                                    "count": 1,
+                                    "next_pitches": {}
+                                }
+                            }
+                        },
+                        "CH": {
+                            "count": 1,
+                            "next_pitches": {
+                                "FC": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "FF": {
+                                            "count": 1,
+                                            "next_pitches": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "CH": {
+                    "count": 1,
+                    "next_pitches": {
+                        "FF": {
+                            "count": 1,
+                            "next_pitches": {}
+                        }
+                    }
+                }
+            }
+        },
+        "SL": {
+            "count": 1,
+            "next_pitches": {
+                "FC": {
+                    "count": 1,
+                    "next_pitches": {
+                        "FF": {
+                            "count": 1,
+                            "next_pitches": {
+                                "FF": {
+                                    "count": 1,
+                                    "next_pitches": {
+                                        "KC": {
+                                            "count": 1,
+                                            "next_pitches": {}
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

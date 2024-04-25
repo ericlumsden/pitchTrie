@@ -24,7 +24,13 @@ class Pitch:
             if (next_pitch_ == pitch_.get_pitch()) and (next_seq_ == pitch_.get_seq()):
                 return pitch_
     # to make conversion to json easier...
-    def dictionize(self): return {'count': self.count, 'next_pitches': {f'{next_pitch.get_pitch()}': {} for next_pitch in self.next_pitch}}
+    def dictionize(self): return {'count': self.count, 'next_pitches': {}}
+    # recursive nature of collecting data can happen right here in the Pitch class
+    def jsonify(self):
+        temp_dict = self.dictionize()
+        for next_pitch in self.get_next_pitches():
+            temp_dict['next_pitches'][next_pitch.get_pitch()] = next_pitch.jsonify()
+        return temp_dict
 
 
 
@@ -70,28 +76,11 @@ class PitchTrie:
             graph = pydot.Dot(graph_type='graph')
             self.traverse_trie(graph, first_pitch)
             graph.write_png(f'{title}_firstPitch_{first_pitch.get_pitch()}.png')
-        
-    def json_trie(self, file_name='PitchTrie'):
-        # Because the .get_next_pitches() method returns a list of Pitch instances, this will not make a dict of values
-        dict_list = []
-        def collect_next(node, temp_dict):
-            if len(node.get_next_pitches()) == 0:
-                dict_list.pop()
-                pass
-            temp_dict['next_pitches'][node.get_pitch()] = node.dictionize()
-            dict_list.append(temp_dict['next_pitches'])
-            for idx, pitch in enumerate(temp_dict['next_pitches']):
-                dict_list.append(temp_dict['next_pitches'][pitch])
-                next_node = [n_node for n_node in node.get_next_pitches() if n_node.name == pitch][0]
-                collect_next(next_node, dict_list[-1])
-                if idx == len(temp_dict['next_pitches'])-1:
-                    dict_list.pop()
-        self.seq_dict['node'] = {'next_pitches': {pitch_.get_pitch(): {} for pitch_ in self.pitch_sequence.get_next_pitches()}}
-        stand_in_dict = self.seq_dict['node']
-        collect_next(self.pitch_sequence, stand_in_dict)
-        print(self.seq_dict)
+    
+    def json_transform(self, file_name='PitchTrie-json'):
+        temp_dict = self.pitch_sequence.jsonify()
         with open(f"{file_name}.json", "w") as f:
-            json.dump(self.seq_dict, f)
+            json.dump(temp_dict, f, indent=4)
         
 
 
@@ -101,7 +90,7 @@ def test(temp_sequence):
     test_trie = PitchTrie(temp_sequence)
     test_trie.sequence()
     test_trie.graph_sequence(title='ColeTest')
-    test_trie.json_trie(file_name='ColeTest')
+    test_trie.json_transform(file_name='ColeTest')
 
 
 if __name__ == "__main__":
