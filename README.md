@@ -6,5 +6,5 @@ you know that feeling of looking at a word for too long and suddenly it becomes 
 Currently the .graph_sequence() method makes one image for each of the first pitches as saving them together in one image is very cramped and hard to read
 
 TODO:
- - Make a savable version
- - Blog to explain to interested amateur baseball statisticians
+    - Improve graphs by adding personalization options
+    - Blog to explain
