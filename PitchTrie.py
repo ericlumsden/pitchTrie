@@ -1,6 +1,6 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
+import json
 import pandas as pd
-import matplotlib.pyplot as plt
 import pydot
 
 # Need multiple instances of the Pitch class
@@ -18,6 +18,8 @@ class Pitch:
     def add_next_pitch(self, pitch_): self.next_pitch.append(pitch_)
     def get_next_pitches(self): return self.next_pitch
     def advance_pitch(self, next_pitch_, next_seq_):
+        if next_seq_ == None:
+            return 
         for pitch_ in self.next_pitch:
             if (next_pitch_ == pitch_.get_pitch()) and (next_seq_ == pitch_.get_seq()):
                 return pitch_
@@ -30,6 +32,7 @@ class Pitch:
 class PitchTrie:
     pitch_df: pd.DataFrame
     pitch_sequence = Pitch('node', '')
+    seq_dict: dict=field(default_factory=lambda: {})
 
     def sequence(self):
         working_list = self.pitch_sequence
@@ -68,6 +71,28 @@ class PitchTrie:
             self.traverse_trie(graph, first_pitch)
             graph.write_png(f'{title}_firstPitch_{first_pitch.get_pitch()}.png')
         
+    def json_trie(self, file_name='PitchTrie'):
+        # Because the .get_next_pitches() method returns a list of Pitch instances, this will not make a dict of values
+        dict_list = []
+        def collect_next(node, temp_dict):
+            if len(node.get_next_pitches()) == 0:
+                dict_list.pop()
+                pass
+            temp_dict['next_pitches'][node.get_pitch()] = node.dictionize()
+            dict_list.append(temp_dict['next_pitches'])
+            for idx, pitch in enumerate(temp_dict['next_pitches']):
+                dict_list.append(temp_dict['next_pitches'][pitch])
+                next_node = [n_node for n_node in node.get_next_pitches() if n_node.name == pitch][0]
+                collect_next(next_node, dict_list[-1])
+                if idx == len(temp_dict['next_pitches'])-1:
+                    dict_list.pop()
+        self.seq_dict['node'] = {'next_pitches': {pitch_.get_pitch(): {} for pitch_ in self.pitch_sequence.get_next_pitches()}}
+        stand_in_dict = self.seq_dict['node']
+        collect_next(self.pitch_sequence, stand_in_dict)
+        print(self.seq_dict)
+        with open(f"{file_name}.json", "w") as f:
+            json.dump(self.seq_dict, f)
+        
 
 
 
@@ -76,6 +101,7 @@ def test(temp_sequence):
     test_trie = PitchTrie(temp_sequence)
     test_trie.sequence()
     test_trie.graph_sequence(title='ColeTest')
+    test_trie.json_trie(file_name='ColeTest')
 
 
 if __name__ == "__main__":
